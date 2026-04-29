@@ -8,9 +8,36 @@ def open_file():
         title="Select a Python File", filetypes=[("Python files", "*.py")]
     )
     if file_path:
-        # TODO: Execute the file and capture output
-        # Hint: Use subprocess.run() or subprocess.Popen()
-        pass
+        try:
+            # Execute the Python script and capture output
+            result = subprocess.run(
+                ["python3", file_path],
+                capture_output=True,  # Capture stdout and stderr
+                text=True,  # Return output as strings (not bytes)
+                timeout=30,  # Prevent hanging (30 second limit)
+            )
+
+            # Clear the text widget
+            text_widget.delete(1.0, tk.END)
+
+            # Display the script path
+            text_widget.insert(tk.END, f"Script: {file_path}\n")
+            text_widget.insert(tk.END, "-" * 50 + "\n\n")
+
+            # Show stdout (the print statements)
+            if result.stdout:
+                text_widget.insert(tk.END, result.stdout)
+
+            # Show stderr (errors) in red if they exist
+            if result.stderr:
+                text_widget.insert(tk.END, f"\nErrors:\n{result.stderr}")
+
+        except subprocess.TimeoutExpired:
+            text_widget.delete(1.0, tk.END)
+            text_widget.insert(tk.END, "Error: Script took too long to run (>30s)")
+        except Exception as e:
+            text_widget.delete(1.0, tk.END)
+            text_widget.insert(tk.END, f"Error: {str(e)}")
 
 
 root = tk.Tk()
