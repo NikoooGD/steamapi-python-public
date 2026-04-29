@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""
-steam_owned_free.py
-- Loads STEAM_API_KEY from environment or key.env/.env (optional).
-- Uses default STEAM_ID 76561199294079348 (override with STEAM_ID env var).
-- Fetches owned games for the SteamID and checks which are free via the Storefront API.
-- Writes output to output.json.
-"""
+
 
 import json
 import os
